@@ -30,8 +30,8 @@ files of Chaste have to be replaced:
 
 The following .cpp and .hpp files (if not stated otherwise) have to be added
 to the existing Chaste code:
-- all mutations except wild-type with .cpp and .hpp files
-  (see cell_based > src > cell > properties > mutations)
+- all mutations except wild-type in
+  cell_based/src/cell/properties/mutations
 - cell_based/src/population/killers/CryptFissionCellKiller
 - cell_based/src/population/killers/HomeostaticCellKiller
 - crypt/test/cell/TestColonicCryptSimulation.hpp
