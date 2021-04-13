@@ -19,14 +19,26 @@ available here in this repository.
 For the Chaste documentation, please read https://chaste.cs.ox.ac.uk/trac/wiki/ChasteGuides.
 
 ### Preliminaries
-For running the numerical simulations with Chaste, the following existing
+For running the numerical simulations with Chaste, the following .cpp and .hpp existing
 files of Chaste have to be replaced:
+- crypt/src/cell/cycle/SimpleWntCellCycleModel.hpp
 - crypt/src/cell/cycle/SimpleWntCellCycleModel.cpp
+
+- cell_based/src/cell/cycle/AbstractPhaseBasedCellCycleModel.hpp
 - cell_based/src/cell/cycle/AbstractPhaseBasedCellCycleModel.cpp
+
+- cell_based/src/population/forces/GeneralisedLinearSpringForce.hpp
 - cell_based/src/population/forces/GeneralisedLinearSpringForce.cpp
+
+- cell_based/src/simulation/numerical_methods/ForwardEulerNumericalMethod.hpp
 - cell_based/src/simulation/numerical_methods/ForwardEulerNumericalMethod.cpp
+
+- cell_based/src/population/AbstractCellPopulation.hpp
 - cell_based/src/population/AbstractCellPopulation.cpp
+
+- cell_based/src/population/AbstractCentreBasedCellPopulation.hpp
 - cell_based/src/population/AbstractCentreBasedCellPopulation.cpp
+
 
 The following .cpp and .hpp files (if not stated otherwise) have to be added
 to the existing Chaste code:
