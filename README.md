@@ -39,9 +39,10 @@ to the existing Chaste code:
 ### Execute the code
 The main file is *crypt/test/cell/TestColonicCryptSimulation.hpp*
 
-To compile the code, go to the build folder and
+To configure and compile the code after replacing and adding the files listed above, go to the build folder and
 
-    make TestColonicCryptSimulation
+    cmake ../
+    make -j4
 
 Run the code on one processor with
 
@@ -82,6 +83,7 @@ available on https://www.cs.ox.ac.uk/chaste/download.html.
 
 ### OS Requirements
 For OS requirements, we refer to https://chaste.cs.ox.ac.uk/chaste/tutorials/release_2019.1/.
+We note that the custom code base runs on Ubuntu 18.04 LTS. 
 
 ## Installation Guide
 The Installation Guide for Chaste is available online https://chaste.cs.ox.ac.uk/chaste/tutorials/release_2019.1/InstallGuides/InstallGuide.html.
