@@ -13,7 +13,7 @@
 #include "SmartPointers.hpp"
 #include "AbstractCellBasedTestSuite.hpp"
 
-// The next header file defines a helper class for generating cells for crypt simulations. 
+// The next header file defines a helper class for generating cells for crypt simulations.
 
 #include "CryptCellsGenerator.hpp"
 
@@ -105,7 +105,7 @@
 class TestColonicCryptSimulation : public AbstractCellBasedTestSuite
 {
 public:
-  	
+
 
     void TestColonicCrypt()
     {
@@ -123,9 +123,9 @@ public:
 		boost::shared_ptr<AbstractCellProperty> p_state_3(CellPropertyRegistry::Instance()->Get<ApcTwoHitCellMutationState>());
 		boost::shared_ptr<AbstractCellProperty> p_state_4(CellPropertyRegistry::Instance()->Get<BetaCateninOneHitCellMutationState>());
 		boost::shared_ptr<AbstractCellProperty> p_state_5(CellPropertyRegistry::Instance()->Get<MMRApcOneHitCellMutationState>());
-		boost::shared_ptr<AbstractCellProperty> p_state_6(CellPropertyRegistry::Instance()->Get<MMRApcTwoHitCellMutationState>());		
-		boost::shared_ptr<AbstractCellProperty> p_state_7(CellPropertyRegistry::Instance()->Get<MMRBCOneHitCellMutationState>());	
-		boost::shared_ptr<AbstractCellProperty> p_state_8(CellPropertyRegistry::Instance()->Get<BCOneHitApcOneHitCellMutationState>());	
+		boost::shared_ptr<AbstractCellProperty> p_state_6(CellPropertyRegistry::Instance()->Get<MMRApcTwoHitCellMutationState>());
+		boost::shared_ptr<AbstractCellProperty> p_state_7(CellPropertyRegistry::Instance()->Get<MMRBCOneHitCellMutationState>());
+		boost::shared_ptr<AbstractCellProperty> p_state_8(CellPropertyRegistry::Instance()->Get<BCOneHitApcOneHitCellMutationState>());
 		boost::shared_ptr<AbstractCellProperty> p_state_9(CellPropertyRegistry::Instance()->Get<MMRBCOneHitApcOneHitCellMutationState>());
 		boost::shared_ptr<AbstractCellProperty> p_state_10(CellPropertyRegistry::Instance()->Get<BetaCateninTwoHitCellMutationState>());
 		boost::shared_ptr<AbstractCellProperty> p_state_11(CellPropertyRegistry::Instance()->Get<MMRBCTwoHitCellMutationState>());
@@ -139,7 +139,7 @@ public:
 		boost::shared_ptr<AbstractCellProperty> p_state_19(CellPropertyRegistry::Instance()->Get<BCLOHApcLOHCellMutationState>());
 		boost::shared_ptr<AbstractCellProperty> p_state_20(CellPropertyRegistry::Instance()->Get<BCLOHMMRApcLOHCellMutationState>());
 		boost::shared_ptr<AbstractCellProperty> p_state_21(CellPropertyRegistry::Instance()->Get<BCLOHCellMutationState>());
-		
+
 		/* We need to distinguish between MLH1 and MSH2 germline mutation carriers, since MLH1 LOH of the WT allele can induce a CTNNB1 double hit,
 		 * or lead to the loss of a CTNNB1 mutation.
 		 * To simulate different patients, we need to alter the boolean variable here and in SimpleWntCellCycleModel.cpp. */
@@ -157,14 +157,14 @@ public:
 		int total_crypt_no = 0;
 		int MMR_crypt_no = 0;
 		int MMR_DCF_no = 0;
-		
+
 		// Initialize the MPI environment, to simulate multiple crypts simultaneously. We collectively call the crypts simultated on each processor "clusters".
 
 		MPI_Init(NULL, NULL);
 		int rank;
 		MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-		
-		
+
+
 		for (int j=1; j<2; j++)
 		{
 
@@ -172,17 +172,17 @@ public:
 		     * we will pass it to the WntConcentration object (see below).
 			 * Further we set the baseline probability of crypt fission withing an hour, which is passed into the CryptFissionCellKiller,
 			 * where it is increased for MMR-deficient crypts. */
-		    
+
 		    double crypt_height = 69.0;
 			double mCryptFissionRate = 0.0000012627;  // per 1 hour
-			
+
 			/* We initialize the crypt counter, which is incremented whenever crypt fission occurs. The crypt fission rate is multiplied accordingly.
 			 * This variable is also passed into the CryptFissionCellKiller. */
-			 
+
 			int crypt_counter = 1;
 
 		    // We first create a cylindrical mesh, and get the cell location indices.
-		   
+
 		    CylindricalHoneycombMeshGenerator generator(20, 80, 2); // (circumference, height, ghost node layers)
 		    Cylindrical2dMesh* p_mesh = generator.GetCylindricalMesh();
 
@@ -201,7 +201,7 @@ public:
 		    // In order to visualize mutant cells and to count how many cells there are of each type we need to use the following command.
 
 		    cell_population.AddCellPopulationCountWriter<CellMutationStatesCountWriter>();
-		
+
 
 		    /* When using a SimpleWntCellCycleModel, we need a way of telling each cell what the Wnt concentration
 		     * is at its location. To do this, we set up a WntConcentration object. Like SimulationTime,
@@ -215,17 +215,17 @@ public:
 		    WntConcentration<2>::Instance()->SetCellPopulation(cell_population);
 		    WntConcentration<2>::Instance()->SetCryptLength(crypt_height);
 
-			/* We want to obtain different outcomes in each cluster. Therefore we reseed the RandomNumberGenerator to a number 
+			/* We want to obtain different outcomes in each cluster. Therefore we reseed the RandomNumberGenerator to a number
 			 * which is very likely to be new. Here we use getpid(), which returns the system's process ID for the current program. */
 
-			RandomNumberGenerator::Instance()->Reseed(getpid()); 
-			 
+			RandomNumberGenerator::Instance()->Reseed(getpid());
+
 		    // Create a simulator.
 
 		    CryptSimulation2d simulator(cell_population);
 
 			// Create a specific output directory for every crypt, to be able to view specific simulations and results.
-	
+
 			std::string outputdirectory;
 			outputdirectory = "Crypt" + std::to_string(rank) + "." + std::to_string(j);
 		    simulator.SetOutputDirectory(outputdirectory);
@@ -243,8 +243,8 @@ public:
 		    simulator.AddCellKiller(p_killer2);
 			MAKE_PTR(VolumeTrackingModifier<2>, p_modifier);
         	simulator.AddSimulationModifier(p_modifier);
-			
-			
+
+
 			// Set up boolean variables to track mutation states of the stem cell.
 
 			bool Is_SC_MMR_mut = false;
@@ -265,7 +265,7 @@ public:
 
 			// APC-mutated stem cell as initial condition.
 
-			Is_SC_APC_One_Hit_LOH_mut = true;
+			/*Is_SC_APC_One_Hit_LOH_mut = true;
 			for (AbstractCellPopulation<2>::Iterator cell_iter = cell_population.Begin();
 		         	cell_iter != cell_population.End();
 		         	++cell_iter)
@@ -276,7 +276,7 @@ public:
 		       	{
 						cell_iter->SetMutationState(p_state_12); // APC LOH mutation
 				}
-			}
+			}*/
 
 			// Output that we start the simulation.
 
@@ -289,14 +289,14 @@ public:
 
 				simulator.SetEndTime(i*1680); // The number which is multiplied by i is the SC cycle time (in hours).
 				simulator.Solve();
-		
+
 				// End of the stem cell cycle
-				
+
 				cout << "End of SC cycle " << i << " in crypt " << j << " in cluster " << rank << "." << endl;
-				
+
 				// We calculate the percentage of MMR-deficient cells within the crypt.
 
-				double mmr_percentage = (double)cell_population.GetNumMMRCells()/(double)cell_population.GetNumRealCells();	
+				double mmr_percentage = (double)cell_population.GetNumMMRCells()/(double)cell_population.GetNumRealCells();
 
 				if (mmr_percentage > 0.8) // declare crypt MMR-deficient if over 80% of its cells are
 				{
@@ -317,22 +317,20 @@ public:
 				// We first consider the loss of stem cells due to lethal mutations occurring upon cell division.
 
 				double SC_loss_prob = 0.0001; // Probability that a stem cell dies (corresponds to about 1/30 % deleterious mutations)
-				
+
 				if (Is_SC_MMR_mut)
-				{									
+				{
 					SC_loss_prob *= 100.0; // Increase SC death probability 100-fold
 				}
 
-				//SC_loss_prob *= 100.0; // mice simulation
-
 
 				if (RandomNumberGenerator::Instance()->ranf() < SC_loss_prob) // stem cell is lost
-				{	
+				{
 
 					cout << "SC " << current_SC+1 << " of crypt " << j << " in cluster " << rank  <<  " is lost at time " << SimulationTime::Instance()->GetTime() << endl; // output the time of SC loss
-					
-					// The stem cell loss is compensated for by symmetric division of an adjacent stem cell.				
-					
+
+					// The stem cell loss is compensated for by symmetric division of an adjacent stem cell.
+
 					if (current_SC < SC_number)
 					{
 						all_mut_states[current_SC] = all_mut_states[current_SC+1];
@@ -350,7 +348,7 @@ public:
 					std::vector<bool> temp = all_mut_states[SC_index]; // store status of the current "last" cell in the ordering temporarily
 					all_mut_states[SC_index] = all_mut_states[current_SC]; // first swap
 					all_mut_states[current_SC]= temp; // second swap
-				
+
 					if (SC_index != current_SC)
 					{
 						cout << "We changed the cell numbering. SC " << current_SC+1 << " is now SC " << SC_index+1 << " and vice versa." << endl;
@@ -362,8 +360,8 @@ public:
 					{
 						for (int i=1; i < SC_index; i++)
 						{
-							// replace mutation status by the ones of the old stem cell						
-	
+							// replace mutation status by the ones of the old stem cell
+
 							if (RandomNumberGenerator::Instance()->ranf() < (double)(SC_index - i)/(double)(SC_index +1 -i))
 							{
 								Is_SC_MMR_mut = all_mut_states[i][0];
@@ -402,8 +400,8 @@ public:
 					{
 						SC_index++;
 						current_SC = SC_index;
-						cout << "It is now populated by a new SC, namely SC " << current_SC+1 << ". Mutations are lost." << endl; 
-					
+						cout << "It is now populated by a new SC, namely SC " << current_SC+1 << ". Mutations are lost." << endl;
+
 						//Reset boolean variables
 						Is_SC_MMR_mut = false;
 						Is_SC_MMR_LOH_mut = false;
@@ -421,20 +419,20 @@ public:
 						{
 				    		double cell_height = cell_population.GetLocationOfCellCentre(*cell_iter)[1];
 
-				    		if (cell_height <= 0.5) 
+				    		if (cell_height <= 0.5)
 				    		{
 								cell_iter->SetMutationState(p_state_0); // all cells of the lowest TA cell row lose their mutations.
 				    		}
 						}
 					}
 				}
-				
+
 				// Now, consider a change of the stem cell which populates the crypt.
 
 				double SC_change_prob = 0.5; // Probability that a different SC populates the crypt (should occur every 5 months on average)
 
-				if (RandomNumberGenerator::Instance()->ranf() < SC_change_prob) 
-				{	
+				if (RandomNumberGenerator::Instance()->ranf() < SC_change_prob)
+				{
 					// Change cell numbering to make things easier, changed cell is now the "last" (i.e. the cell index) cell (in case it was not already).
 					std::vector<bool> temp = all_mut_states[SC_index]; // store status of the "last" cell in the ordering temporarily
 					all_mut_states[SC_index] = all_mut_states[current_SC]; // first swap
@@ -444,7 +442,7 @@ public:
 					{
 						cout << "We changed the cell numbering. SC " << current_SC+1 << " is now SC " << SC_index+1 << " and vice versa." << endl;
 					}
-					
+
 					double p_old_SC = (double)SC_index/(double)SC_number; // the probability that the next stem cell is an "old" one
 
 					if (RandomNumberGenerator::Instance()->ranf() < p_old_SC) // old stem cell
@@ -492,7 +490,7 @@ public:
 						SC_index++;
 						current_SC = SC_index;
 						cout << "Crypt " << j << " in cluster " << rank  << " is populated by a new SC, namely SC " << current_SC+1 << ". Mutations are lost." << endl;
-					
+
 						// Reset boolean variables
 						Is_SC_MMR_mut = false;
 						Is_SC_MMR_LOH_mut = false;
@@ -510,18 +508,18 @@ public:
 						{
 				    		double cell_height = cell_population.GetLocationOfCellCentre(*cell_iter)[1];
 
-				    		if (cell_height <= 0.5) 
+				    		if (cell_height <= 0.5)
 				    		{
 								cell_iter->SetMutationState(p_state_0); // all cells of the lowest TA cell row lose their mutations.
 				    		}
 						}
 					}
 				}
-				
+
 				/* After each stem cell cycle, the SC can mutate according to certain probabilities.
 				 * We simulate a SC mutation by mutating all cells from the lowest row of the crypt. */
 
-				// We first define the mutation probabilities. 
+				// We first define the mutation probabilities.
 
 				double MMRMutProb; // Probability of a sporadic MMR mutation. Depends on the germline mutation of the patient.
 
@@ -533,7 +531,7 @@ public:
 				{
 					MMRMutProb = 0.000004375; // MSH2
 				}
-			
+
 				double MMRLOHProb;
 
 				if (MLH1)
@@ -544,10 +542,10 @@ public:
 				{
 					MMRLOHProb = 0.00000987; // MSH2, only consider second allele
 				}
-		
+
 				double ApcHitProb = 0.0000075; // Probability of a sporadic Apc mutation.
 				double ApcLOHProb = 0.0000343;
-				double BetaCateninProb = 0.000000003125; // Probability of a sporadic Beta-Catenin mutation.
+				double BetaCateninProb = 0.0000000375; // Probability of a sporadic Beta-Catenin mutation.
 				double BetaCateninLOHProb = 0.000010116; // Probability of Beta-Catenin LOH (important if second allele becomes mutated)
 
 				if (Is_SC_MMR_mut)
@@ -558,11 +556,6 @@ public:
 					MMRMutProb = 0.0;
 				}
 
-				/*// mice simulation: all cells are MMR-deficient, which here is the wild-type
-				ApcHitProb *= 100.0;
-				BetaCateninProb *= 100.0;
-				MMRMutProb = 0.0;
-				MMRLOHProb = 0.0;*/
 
 				if (Is_SC_MMR_LOH_mut)
 				{
@@ -583,7 +576,7 @@ public:
 
 				if (Is_SC_APC_One_Hit_LOH_mut)
 				{
-					ApcLOHProb *= 0.5; 
+					ApcLOHProb *= 0.5;
 					ApcHitProb *= 0.5;
 				}
 
@@ -617,7 +610,7 @@ public:
 				// We start with MMR mutations. LOH is first, which is the more complicated case.
 
 				if (RandomNumberGenerator::Instance()->ranf() < MMRLOHProb)
-				{	
+				{
 					cout << "SC " << current_SC+1 << " undergoes MMR LOH in crypt " << j << " in cluster " << rank << " at time " << SimulationTime::Instance()->GetTime() << endl; // output time of event
 
 					bool NewStemCell = false; // track whether the stem cell dies. If so, then the MLH1 mutation does not matter anymore.
@@ -626,16 +619,16 @@ public:
 
 					if (MLH1 && RandomNumberGenerator::Instance()->ranf() < 0.8) // MLH1 LOH affects CTNNB1 (in 80% of cases)
 					{
-									
+
 						if (Is_BC_affected && RandomNumberGenerator::Instance()->ranf() < 0.5) // one allele was already lost and second one now too
-						{	
+						{
 							NewStemCell = true;
 							// stem cell dies, copy from above:
 
 							cout << "SC " << current_SC+1 << " of crypt " << j << " in cluster " << rank  <<  " is lost due to CTNNB1 LOH at time " << SimulationTime::Instance()->GetTime() << endl; // output the time of SC loss
-					
-							// The stem cell loss is compensated for by symmetric division of an adjacent stem cell.				
-							
+
+							// The stem cell loss is compensated for by symmetric division of an adjacent stem cell.
+
 							if (current_SC < SC_number)
 							{
 								all_mut_states[current_SC] = all_mut_states[current_SC+1];
@@ -653,7 +646,7 @@ public:
 							std::vector<bool> temp = all_mut_states[SC_index]; // store status of the current "last" cell in the ordering temporarily
 							all_mut_states[SC_index] = all_mut_states[current_SC]; // first swap
 							all_mut_states[current_SC]= temp; // second swap
-						
+
 							if (SC_index != current_SC)
 							{
 								cout << "We changed the cell numbering. SC " << current_SC+1 << " is now SC " << SC_index+1 << " and vice versa." << endl;
@@ -665,8 +658,8 @@ public:
 							{
 								for (int i=1; i < SC_index; i++)
 								{
-									// replace mutation status by the ones of the old stem cell						
-			
+									// replace mutation status by the ones of the old stem cell
+
 									if (RandomNumberGenerator::Instance()->ranf() < (double)(SC_index - i)/(double)(SC_index +1 -i))
 									{
 										Is_SC_MMR_mut = all_mut_states[i][0];
@@ -705,8 +698,8 @@ public:
 							{
 								SC_index++;
 								current_SC = SC_index;
-								cout << "It is now populated by a new SC, namely SC " << current_SC+1 << ". Mutations are lost." << endl; 
-							
+								cout << "It is now populated by a new SC, namely SC " << current_SC+1 << ". Mutations are lost." << endl;
+
 								//Reset boolean variables
 								Is_SC_MMR_mut = false;
 								Is_SC_MMR_LOH_mut = false;
@@ -724,7 +717,7 @@ public:
 								{
 									double cell_height = cell_population.GetLocationOfCellCentre(*cell_iter)[1];
 
-									if (cell_height <= 0.5) 
+									if (cell_height <= 0.5)
 									{
 										cell_iter->SetMutationState(p_state_0); // all cells of the lowest TA cell row lose their mutations.
 									}
@@ -748,7 +741,7 @@ public:
 									BetaCateninProb = 0.0;
 								}
 								else // BC mutation is on lost allele, now we lose the point mutation
-								{	
+								{
 									cout << "Beta-catenin mutation is lost in SC " << current_SC+1 << " due to MLH1 LOH in crypt " << j << " in cluster " << rank << " at time " << SimulationTime::Instance()->GetTime() << endl; // output event
 									BetaCateninProb *= 2.0; // correct factor from above, since probability was already halved
 									Is_SC_BC_One_Hit_mut = false; // mutation is lost
@@ -756,7 +749,7 @@ public:
 							}
 						}
 					}
-	
+
 
 					// Now take care of the MMR LOH itself, if it is still the same stem cell.
 
@@ -772,9 +765,9 @@ public:
 						}
 
 						if ((MLH1 && Is_SC_MMR_LOH_mut && !Is_SC_MLH1_LOH_mut && RandomNumberGenerator::Instance()->ranf() < 0.5) || (MLH1 && Is_SC_MLH1_LOH_mut) || !MLH1) // first LOH and WT allele, second LOH, MSH2 LOH
-						{	
+						{
 							Is_SC_MMR_mut = true; // SC is now MMR-deficient
-			
+
 							// Now all cells of the lowest TA cell row are assigned an MMR mutation. The new mutation state depends on previous mutations.
 
 							for (AbstractCellPopulation<2>::Iterator cell_iter = cell_population.Begin();
@@ -799,7 +792,7 @@ public:
 									}
 									else if (cell_iter->GetMutationState()->IsType<ApcLOHCellMutationState>())
 									{
-										cell_iter->SetMutationState(p_state_13); 
+										cell_iter->SetMutationState(p_state_13);
 									}
 									else if (cell_iter->GetMutationState()->IsType<BCLOHApcOneHitCellMutationState>())
 									{
@@ -814,37 +807,37 @@ public:
 										cell_iter->SetMutationState(p_state_6); // APC-- and MMR
 									}
 									else if (cell_iter->GetMutationState()->IsType<BetaCateninOneHitCellMutationState>())
-									{	
-											cell_iter->SetMutationState(p_state_7); // beta-catenin + and MMR	
+									{
+											cell_iter->SetMutationState(p_state_7); // beta-catenin + and MMR
 									}
 									else if (cell_iter->GetMutationState()->IsType<BetaCateninTwoHitCellMutationState>())
-									{					
+									{
 										cell_iter->SetMutationState(p_state_11); // beta-catenin ++ and MMR
 									}
 									else if (cell_iter->GetMutationState()->IsType<BCOneHitApcOneHitCellMutationState>())
 									{
-											cell_iter->SetMutationState(p_state_9); // beta-catenin +, APC +- and MMR	
+											cell_iter->SetMutationState(p_state_9); // beta-catenin +, APC +- and MMR
 									}
 									else if (cell_iter->GetMutationState()->IsType<BCOneHitApcLOHCellMutationState>())
 									{
-											cell_iter->SetMutationState(p_state_15); // beta-catenin +, APC +- and MMR	
+											cell_iter->SetMutationState(p_state_15); // beta-catenin +, APC +- and MMR
 									}
 								}
 							}
 						}
 					}
 				}
-									
+
 				// Now do point mutations. If the stem cell already is MMR-deficient, we do not give any output and only mutate the cells again.
 
-				if (RandomNumberGenerator::Instance()->ranf() < MMRMutProb || Is_SC_MMR_mut ) 
-				{	
+				if (RandomNumberGenerator::Instance()->ranf() < MMRMutProb || Is_SC_MMR_mut )
+				{
 					if (!Is_SC_MMR_mut)	// relevant MMR point mutation occurs
 					{
 						cout << "SC " << current_SC+1 << " undergoes MMR point mutation in crypt " << j << " in cluster " << rank << " at time " << SimulationTime::Instance()->GetTime() << endl; // output the time of mutation
 						Is_SC_MMR_mut = true; // cell is now MMR-deficient
 					}
-			
+
 					for (AbstractCellPopulation<2>::Iterator cell_iter = cell_population.Begin();
 		         	cell_iter != cell_population.End();
 		         	++cell_iter)
@@ -867,7 +860,7 @@ public:
 							}
 							else if (cell_iter->GetMutationState()->IsType<ApcLOHCellMutationState>())
 							{
-								cell_iter->SetMutationState(p_state_13); 
+								cell_iter->SetMutationState(p_state_13);
 							}
 							else if (cell_iter->GetMutationState()->IsType<BCLOHApcOneHitCellMutationState>())
 							{
@@ -895,7 +888,7 @@ public:
 							}
 							else if (cell_iter->GetMutationState()->IsType<BCOneHitApcLOHCellMutationState>())
 							{
-								cell_iter->SetMutationState(p_state_15); 
+								cell_iter->SetMutationState(p_state_15);
 							}
 		        		}
 					}
@@ -903,22 +896,22 @@ public:
 
 				// Now do APC mutations. LOH again is first, only now we do not always want to know, since no other gene is involved.
 				// We have to do it slightly differently than as done in the MMR case. First we compute whether a mutation occurs.
-		
+
 				if (RandomNumberGenerator::Instance()->ranf() < ApcLOHProb)
-				{	
+				{
 
-					bool NewStemCell = false; // again track whether stem cell dies			
+					bool NewStemCell = false; // again track whether stem cell dies
 
-					
+
 					if (Is_SC_APC_One_Hit_LOH_mut) // second LOH event on the other allele (probability was halved)
 					{
 						NewStemCell = true; // cell dies
 
 						// copy from above again:
 						cout << "SC " << current_SC+1 << " of crypt " << j << " in cluster " << rank  <<  " is lost due to APC LOH at time " << SimulationTime::Instance()->GetTime() << endl; // output the time of SC loss
-					
-						// The stem cell loss is compensated for by symmetric division of an adjacent stem cell.				
-							
+
+						// The stem cell loss is compensated for by symmetric division of an adjacent stem cell.
+
 						if (current_SC < SC_number)
 						{
 							all_mut_states[current_SC] = all_mut_states[current_SC+1];
@@ -936,7 +929,7 @@ public:
 						std::vector<bool> temp = all_mut_states[SC_index]; // store status of the current "last" cell in the ordering temporarily
 						all_mut_states[SC_index] = all_mut_states[current_SC]; // first swap
 						all_mut_states[current_SC]= temp; // second swap
-						
+
 						if (SC_index != current_SC)
 						{
 							cout << "We changed the cell numbering. SC " << current_SC+1 << " is now SC " << SC_index+1 << " and vice versa." << endl;
@@ -948,8 +941,8 @@ public:
 						{
 							for (int i=1; i < SC_index; i++)
 							{
-								// replace mutation status by the ones of the old stem cell						
-			
+								// replace mutation status by the ones of the old stem cell
+
 								if (RandomNumberGenerator::Instance()->ranf() < (double)(SC_index - i)/(double)(SC_index +1 -i))
 								{
 									Is_SC_MMR_mut = all_mut_states[i][0];
@@ -964,7 +957,7 @@ public:
 									if (i == (SC_index-1)) // only last one is relevant, i.e. the "previous" cell
 									{
 										cout << "It is now populated by SC " << i+1 << " again." << endl;
-										current_SC = i;										
+										current_SC = i;
 									}
 								}
 								else
@@ -988,8 +981,8 @@ public:
 						{
 							SC_index++;
 							current_SC = SC_index;
-							cout << "It is now populated by a new SC, namely SC " << current_SC+1 << ". Mutations are lost." << endl; 
-						
+							cout << "It is now populated by a new SC, namely SC " << current_SC+1 << ". Mutations are lost." << endl;
+
 							//Reset boolean variables
 							Is_SC_MMR_mut = false;
 							Is_SC_MMR_LOH_mut = false;
@@ -1006,7 +999,7 @@ public:
 						 	++cell_iter)
 							{
 								double cell_height = cell_population.GetLocationOfCellCentre(*cell_iter)[1];
-								if (cell_height <= 0.5) 
+								if (cell_height <= 0.5)
 								{
 									cell_iter->SetMutationState(p_state_0); // all cells of the lowest TA cell row lose their mutations.
 								}
@@ -1020,12 +1013,12 @@ public:
 						if (RandomNumberGenerator::Instance()->ranf() < 0.5) // LOH of WT allele
 						{
 							cout << "SC " << current_SC+1 << " undergoes APC-- due to LOH in crypt " << j << " in cluster " << rank << " at time " << SimulationTime::Instance()->GetTime() << endl; // output the time of mutation
-							Is_SC_APC_One_Hit_pt_mut = false; 
+							Is_SC_APC_One_Hit_pt_mut = false;
 							Is_SC_APC_Two_Hit_mut = true;
 							ApcHitProb = 0.0;
 						}
 						else // LOH of mutated allele
-						{	
+						{
 							cout << "APC mutation is lost in SC " << current_SC+1 << " due to APC LOH in crypt " << j << " in cluster " << rank << " at time " << SimulationTime::Instance()->GetTime() << endl; // output event
 
 							Is_SC_APC_One_Hit_pt_mut = false;
@@ -1037,7 +1030,7 @@ public:
 					{
 						cout << "SC " << current_SC+1 << " undergoes APC+- due to LOH in crypt " << j << " in cluster " << rank << " at time " << SimulationTime::Instance()->GetTime() << endl; // output the time of mutation
 						Is_SC_APC_One_Hit_LOH_mut = true;
-						ApcHitProb *= 0.5;	
+						ApcHitProb *= 0.5;
 					}
 				}
 
@@ -1051,11 +1044,11 @@ public:
 
 				    	if (cell_height <= 0.5) // all cells of the lowest TA cell row are mutated. The new mutation status depends on previous mutations.
 				    	{
-							if (cell_iter->GetMutationState()->IsType<MMRTwoHitCellMutationState>()) 
+							if (cell_iter->GetMutationState()->IsType<MMRTwoHitCellMutationState>())
 							{
 								cell_iter->SetMutationState(p_state_13); // APC+- and MMR
 							}
-							else if (cell_iter->GetMutationState()->IsType<BCLOHMMRTwoHitCellMutationState>()) 
+							else if (cell_iter->GetMutationState()->IsType<BCLOHMMRTwoHitCellMutationState>())
 							{
 								cell_iter->SetMutationState(p_state_20); // APC+-, CTNNB1 LOH and MMR
 							}
@@ -1080,9 +1073,9 @@ public:
 				}
 
 				// Now do point mutations.
-				
+
 				if (RandomNumberGenerator::Instance()->ranf() < ApcHitProb)
-				{	
+				{
 					if (Is_SC_APC_One_Hit_pt_mut || Is_SC_APC_One_Hit_LOH_mut ) // second APC hit
 					{
 						cout << "SC " << current_SC+1 << " undergoes APC-- due to point mutation in crypt " << j << " in cluster " << rank << " at time " << SimulationTime::Instance()->GetTime() << endl; // output the time of mutation
@@ -1107,11 +1100,11 @@ public:
 
 				    	if (cell_height <= 0.5) // all cells of the lowest TA cell row are mutated. The new mutation status depends on previous mutations.
 				    	{
-							if (cell_iter->GetMutationState()->IsType<MMRTwoHitCellMutationState>()) 
+							if (cell_iter->GetMutationState()->IsType<MMRTwoHitCellMutationState>())
 							{
 								cell_iter->SetMutationState(p_state_5); // APC+- and MMR
 							}
-				       		else if (cell_iter->GetMutationState()->IsType<BCLOHMMRTwoHitCellMutationState>()) 
+				       		else if (cell_iter->GetMutationState()->IsType<BCLOHMMRTwoHitCellMutationState>())
 							{
 								cell_iter->SetMutationState(p_state_18); // APC+-, CTNNB1 LOH and MMR
 							}
@@ -1137,7 +1130,7 @@ public:
 
 				if (Is_SC_APC_Two_Hit_mut) // APC -- stem cell. Whether due to LOH or point mutation does not make a difference.
 				{
-	
+
 					for (AbstractCellPopulation<2>::Iterator cell_iter = cell_population.Begin();
 				     cell_iter != cell_population.End();
 				     ++cell_iter)
@@ -1146,12 +1139,12 @@ public:
 
 				    	if (cell_height <= 0.5) // all cells of the lowest TA cell row are mutated. The new mutation status depends on previous mutations.
 				    	{
-						
-							if (cell_iter->GetMutationState()->IsType<BetaCateninOneHitCellMutationState>() || cell_iter->GetMutationState()->IsType<WildTypeCellMutationState>() || cell_iter->GetMutationState()->IsType<BCLOHCellMutationState>() || cell_iter->GetMutationState()->IsType<BCLOHApcOneHitCellMutationState>() || cell_iter->GetMutationState()->IsType<ApcOneHitCellMutationState>() || cell_iter->GetMutationState()->IsType<BCLOHApcLOHCellMutationState>() || cell_iter->GetMutationState()->IsType<ApcLOHCellMutationState>()|| cell_iter->GetMutationState()->IsType<BCOneHitApcOneHitCellMutationState>() || cell_iter->GetMutationState()->IsType<BCOneHitApcLOHCellMutationState>()) 
-							{			
+
+							if (cell_iter->GetMutationState()->IsType<BetaCateninOneHitCellMutationState>() || cell_iter->GetMutationState()->IsType<WildTypeCellMutationState>() || cell_iter->GetMutationState()->IsType<BCLOHCellMutationState>() || cell_iter->GetMutationState()->IsType<BCLOHApcOneHitCellMutationState>() || cell_iter->GetMutationState()->IsType<ApcOneHitCellMutationState>() || cell_iter->GetMutationState()->IsType<BCLOHApcLOHCellMutationState>() || cell_iter->GetMutationState()->IsType<ApcLOHCellMutationState>()|| cell_iter->GetMutationState()->IsType<BCOneHitApcOneHitCellMutationState>() || cell_iter->GetMutationState()->IsType<BCOneHitApcLOHCellMutationState>())
+							{
 								cell_iter->SetMutationState(p_state_3); // APC-- (or beta-catenin and APC--, which is functionally equivalent in the cell cycle model)
 							}
-				       		
+
 							else if (cell_iter->GetMutationState()->IsType<MMRTwoHitCellMutationState>() || cell_iter->GetMutationState()->IsType<BCLOHMMRTwoHitCellMutationState>() || cell_iter->GetMutationState()->IsType<MMRApcOneHitCellMutationState>() || cell_iter->GetMutationState()->IsType<BCLOHMMRApcOneHitCellMutationState>() || cell_iter->GetMutationState()->IsType<MMRApcLOHCellMutationState>() || cell_iter->GetMutationState()->IsType<BCLOHMMRApcLOHCellMutationState>() || cell_iter->GetMutationState()->IsType<MMRBCOneHitApcOneHitCellMutationState>()  || cell_iter->GetMutationState()->IsType<MMRBCOneHitApcLOHCellMutationState>()|| cell_iter->GetMutationState()->IsType<MMRBCOneHitCellMutationState>())
 							{
 								cell_iter->SetMutationState(p_state_6); // APC-- and MMR (or beta-catenin, APC-- and MMR, which is functionally equivalent)
@@ -1163,18 +1156,18 @@ public:
 				// Lastly, we do beta-catenin mutations. We start with LOH, which is only relevant for cell death, in case either another point mutation occurs, or if the cell becomes MLH1-deficient.
 
 				if (RandomNumberGenerator::Instance()->ranf() < BetaCateninLOHProb)
-				{	
-					bool NewStemCell = false; // again track whether stem cell dies			
-					
+				{
+					bool NewStemCell = false; // again track whether stem cell dies
+
 					if (Is_BC_affected) // second LOH event on the other allele (probability was halved)
 					{
 						NewStemCell = true; // cell dies
 
 						// copy from above again:
 						cout << "SC " << current_SC+1 << " of crypt " << j << " in cluster " << rank  <<  " is lost due to CTNNB1 LOH at time " << SimulationTime::Instance()->GetTime() << endl; // output the time of SC loss
-					
-						// The stem cell loss is compensated for by symmetric division of an adjacent stem cell.				
-							
+
+						// The stem cell loss is compensated for by symmetric division of an adjacent stem cell.
+
 						if (current_SC < SC_number)
 						{
 							all_mut_states[current_SC] = all_mut_states[current_SC+1];
@@ -1192,7 +1185,7 @@ public:
 						std::vector<bool> temp = all_mut_states[SC_index]; // store status of the current "last" cell in the ordering temporarily
 						all_mut_states[SC_index] = all_mut_states[current_SC]; // first swap
 						all_mut_states[current_SC]= temp; // second swap
-						
+
 						if (SC_index != current_SC)
 						{
 							cout << "We changed the cell numbering. SC " << current_SC+1 << " is now SC " << SC_index+1 << " and vice versa." << endl;
@@ -1204,8 +1197,8 @@ public:
 						{
 							for (int i=1; i < SC_index; i++)
 							{
-								// replace mutation status by the ones of the old stem cell						
-			
+								// replace mutation status by the ones of the old stem cell
+
 								if (RandomNumberGenerator::Instance()->ranf() < (double)(SC_index - i)/(double)(SC_index +1 -i))
 								{
 									Is_SC_MMR_mut = all_mut_states[i][0];
@@ -1220,7 +1213,7 @@ public:
 									if (i == (SC_index-1)) // only last one is relevant, i.e. the "previous" cell
 									{
 										cout << "It is now populated by SC " << i+1 << " again." << endl;
-										current_SC = i;										
+										current_SC = i;
 									}
 								}
 								else
@@ -1244,8 +1237,8 @@ public:
 						{
 							SC_index++;
 							current_SC = SC_index;
-							cout << "It is now populated by a new SC, namely SC " << current_SC+1 << ". Mutations are lost." << endl; 
-						
+							cout << "It is now populated by a new SC, namely SC " << current_SC+1 << ". Mutations are lost." << endl;
+
 							//Reset boolean variables
 							Is_SC_MMR_mut = false;
 							Is_SC_MMR_LOH_mut = false;
@@ -1262,7 +1255,7 @@ public:
 						 	++cell_iter)
 							{
 								double cell_height = cell_population.GetLocationOfCellCentre(*cell_iter)[1];
-								if (cell_height <= 0.5) 
+								if (cell_height <= 0.5)
 								{
 									cell_iter->SetMutationState(p_state_0); // all cells of the lowest TA cell row lose their mutations.
 								}
@@ -1270,7 +1263,7 @@ public:
 						}
 						// end of copy
 					}
-					
+
 					if (!NewStemCell && Is_SC_BC_One_Hit_mut) // WT and only point mutation so far, second hit now
 					{
 						if (RandomNumberGenerator::Instance()->ranf() < 0.5) // LOH of WT allele
@@ -1282,7 +1275,7 @@ public:
 							BetaCateninProb = 0.0;
 						}
 						else // LOH of mutated allele
-						{	
+						{
 							cout << "CTNNB1 mutation is lost in SC " << current_SC+1 << " due to CTNNB1 LOH in crypt " << j << " in cluster " << rank << " at time " << SimulationTime::Instance()->GetTime() << endl; // output event
 
 							Is_SC_BC_One_Hit_mut = false;
@@ -1294,13 +1287,13 @@ public:
 					{
 						cout << "SC " << current_SC+1 << " undergoes CTNNB1 LOH in crypt " << j << " in cluster " << rank << " at time " << SimulationTime::Instance()->GetTime() << endl; // output the time of mutation
 						Is_BC_affected = true;
-						BetaCateninProb *= 0.5;	
+						BetaCateninProb *= 0.5;
 					}
-					
+
 					// Now take care of the MLH1 LOH
 
 					if (!NewStemCell && MLH1 && !Is_SC_MLH1_LOH_mut && RandomNumberGenerator::Instance()->ranf() < 0.8) // concurrent MLH1 LOH
-					{	
+					{
 
 						cout << "SC " << current_SC+1 << " undergoes MLH1 LOH due to CTNNB1 LOH in crypt " << j << " in cluster " << rank << " at time " << SimulationTime::Instance()->GetTime() << endl; // output time of event
 
@@ -1327,10 +1320,10 @@ public:
 								Is_SC_MMR_mut = true;
 							}
 						}
-			
+
 						if (Is_SC_MMR_mut) // cell is now MMR-deficient (or already was), mutate lowest cell row as above
-						{	
-				
+						{
+
 							for (AbstractCellPopulation<2>::Iterator cell_iter = cell_population.Begin();
 						 	cell_iter != cell_population.End();
 						 	++cell_iter)
@@ -1353,7 +1346,7 @@ public:
 									}
 									else if (cell_iter->GetMutationState()->IsType<ApcLOHCellMutationState>())
 									{
-										cell_iter->SetMutationState(p_state_13); 
+										cell_iter->SetMutationState(p_state_13);
 									}
 									else if (cell_iter->GetMutationState()->IsType<BCLOHApcOneHitCellMutationState>())
 									{
@@ -1381,7 +1374,7 @@ public:
 									}
 									else if (cell_iter->GetMutationState()->IsType<BCOneHitApcLOHCellMutationState>())
 									{
-										cell_iter->SetMutationState(p_state_15); 
+										cell_iter->SetMutationState(p_state_15);
 									}
 								}
 							}
@@ -1390,20 +1383,20 @@ public:
 				}
 
 				// Now do point mutations.
-	
+
 				if (RandomNumberGenerator::Instance()->ranf() < BetaCateninProb)
-				{	
+				{
 
 					if (Is_SC_BC_One_Hit_mut || Is_BC_affected) // second beta-catenin mutation
 					{
 						cout << "SC " << current_SC+1 << " undergoes beta-catenin ++ mutation in crypt " << j << " in cluster " << rank << " at time " << SimulationTime::Instance()->GetTime() << endl; // output the time of mutation
 						Is_SC_BC_One_Hit_mut = false;
-						Is_SC_BC_Two_Hit_mut = true; 
+						Is_SC_BC_Two_Hit_mut = true;
 					}
 
 					if (!Is_SC_BC_One_Hit_mut && !Is_SC_BC_Two_Hit_mut && !Is_BC_affected) // first beta-catenin mutation
 					{
-						
+
 						cout << "SC " << current_SC+1 << " undergoes beta-catenin + mutation in crypt " << j << " in cluster " << rank << " at time " << SimulationTime::Instance()->GetTime() << endl; // output the time of mutation
 						Is_SC_BC_One_Hit_mut = true;
 					}
@@ -1419,17 +1412,17 @@ public:
 
 		        		if (cell_height <= 0.5) // all cells of the lowest TA cell row are mutated. The new mutation status depends on previous mutations.
 		        		{
-							if (cell_iter->GetMutationState()->IsType<MMRTwoHitCellMutationState>() || cell_iter->GetMutationState()->IsType<BCLOHMMRTwoHitCellMutationState>()) 
+							if (cell_iter->GetMutationState()->IsType<MMRTwoHitCellMutationState>() || cell_iter->GetMutationState()->IsType<BCLOHMMRTwoHitCellMutationState>())
 							{
 								cell_iter->SetMutationState(p_state_7); // beta-catenin and MMR
 							}
-							else if (cell_iter->GetMutationState()->IsType<ApcOneHitCellMutationState>() || cell_iter->GetMutationState()->IsType<BCLOHApcOneHitCellMutationState>()) 
-							{			
+							else if (cell_iter->GetMutationState()->IsType<ApcOneHitCellMutationState>() || cell_iter->GetMutationState()->IsType<BCLOHApcOneHitCellMutationState>())
+							{
 								cell_iter->SetMutationState(p_state_8); // beta-catenin and APC+-
 							}
-							else if (cell_iter->GetMutationState()->IsType<ApcLOHCellMutationState>() || cell_iter->GetMutationState()->IsType<BCLOHApcLOHCellMutationState>()) 
-							{			
-								cell_iter->SetMutationState(p_state_14); 
+							else if (cell_iter->GetMutationState()->IsType<ApcLOHCellMutationState>() || cell_iter->GetMutationState()->IsType<BCLOHApcLOHCellMutationState>())
+							{
+								cell_iter->SetMutationState(p_state_14);
 							}
 		           			else if (cell_iter->GetMutationState()->IsType<WildTypeCellMutationState>() || cell_iter->GetMutationState()->IsType<BCLOHCellMutationState>() )
 							{
@@ -1441,7 +1434,7 @@ public:
 							}
 							else if (cell_iter->GetMutationState()->IsType<MMRApcLOHCellMutationState>() || cell_iter->GetMutationState()->IsType<BCLOHMMRApcLOHCellMutationState>())
 							{
-								cell_iter->SetMutationState(p_state_15); 
+								cell_iter->SetMutationState(p_state_15);
 							}
 		        		}
 					}
@@ -1457,17 +1450,17 @@ public:
 
 		        		if (cell_height <= 0.5) // all cells of the lowest TA cell row are mutated. The new mutation status depends on previous mutations.
 		        		{
-							if (cell_iter->GetMutationState()->IsType<MMRTwoHitCellMutationState>() || cell_iter->GetMutationState()->IsType<MMRBCOneHitCellMutationState>()) 
+							if (cell_iter->GetMutationState()->IsType<MMRTwoHitCellMutationState>() || cell_iter->GetMutationState()->IsType<MMRBCOneHitCellMutationState>())
 							{
 								cell_iter->SetMutationState(p_state_16); // CTNNB1 LOH and MMR
 							}
-							else if (cell_iter->GetMutationState()->IsType<ApcOneHitCellMutationState>() || cell_iter->GetMutationState()->IsType<BCOneHitApcOneHitCellMutationState>()) 
-							{			
+							else if (cell_iter->GetMutationState()->IsType<ApcOneHitCellMutationState>() || cell_iter->GetMutationState()->IsType<BCOneHitApcOneHitCellMutationState>())
+							{
 								cell_iter->SetMutationState(p_state_17); // CTNNB1 LOH and APC+-
 							}
-							else if (cell_iter->GetMutationState()->IsType<ApcLOHCellMutationState>() || cell_iter->GetMutationState()->IsType<BCOneHitApcLOHCellMutationState>()) 
-							{			
-								cell_iter->SetMutationState(p_state_19); 
+							else if (cell_iter->GetMutationState()->IsType<ApcLOHCellMutationState>() || cell_iter->GetMutationState()->IsType<BCOneHitApcLOHCellMutationState>())
+							{
+								cell_iter->SetMutationState(p_state_19);
 							}
 		           			else if (cell_iter->GetMutationState()->IsType<WildTypeCellMutationState>() || cell_iter->GetMutationState()->IsType<BetaCateninOneHitCellMutationState>() )
 							{
@@ -1479,7 +1472,7 @@ public:
 							}
 							else if (cell_iter->GetMutationState()->IsType<MMRApcLOHCellMutationState>() || cell_iter->GetMutationState()->IsType<MMRBCOneHitApcLOHCellMutationState>())
 							{
-								cell_iter->SetMutationState(p_state_20); 
+								cell_iter->SetMutationState(p_state_20);
 							}
 		        		}
 					}
@@ -1502,7 +1495,7 @@ public:
 								cell_iter->SetMutationState(p_state_11); // beta-catenin++ and MMR
 							}
 							else // the rest
-							{			
+							{
 								cell_iter->SetMutationState(p_state_10); // beta-catenin ++
 							}
 		        		}
@@ -1511,7 +1504,7 @@ public:
 			}
 
 			// This marks the end of the crypt simulation. We now check whether the crypt is MMR-deficient and output how many crypt fissions have occurred.
-		
+
 			double mmr_percentage = (double)cell_population.GetNumMMRCells()/(double)cell_population.GetNumRealCells(); // once again check for MMR-deficiency at the end
 			if (mmr_percentage > 0.8)
 			{
@@ -1519,7 +1512,7 @@ public:
 				MMR_crypt_no += p_killer2->GetCryptCounter(); // increase number of MMR-def. crypts
 				MMR_DCF_no++;  // increment number of crypt foci
 			}
-		
+
 			total_crypt_no += p_killer2->GetCryptCounter(); // increase total crypt number
 
 		   /* Finally, we must tidy up by destroying the {{{WntConcentration}}} and {{{SimulationTime}}}
@@ -1529,17 +1522,17 @@ public:
 		   WntConcentration<2>::Destroy();
 		   SimulationTime::Destroy();
 		   SimulationTime::Instance()->SetStartTime(0.0);
-		   RandomNumberGenerator::Instance()->Reseed(getpid()); // reseed for the next crypt 
-		
+		   RandomNumberGenerator::Instance()->Reseed(getpid()); // reseed for the next crypt
+
 		}
-	
+
 	// This marks the end of the outer for-loop, i.e. the cluster simulation. We first calculate the number of new crypts..
 
-	int new_crypts = total_crypt_no - initial_crypt_no; 
-	
+	int new_crypts = total_crypt_no - initial_crypt_no;
+
 	// .. and summarize the results of the simulation.
-	
-	cout << "End of simulation in cluster " << rank << "." << endl; 
+
+	cout << "End of simulation in cluster " << rank << "." << endl;
 	cout << "The total number of crypts in cluster " << rank << " is " << total_crypt_no << ", which is an increase of " << new_crypts << "." << endl;
 	cout << "The total number of MMR-deficient crypts in cluster " << rank << " is " << MMR_crypt_no << "." << endl;
 	cout << "The number of MMR-DCF in cluster " << rank << " is " << MMR_DCF_no << "." << endl;

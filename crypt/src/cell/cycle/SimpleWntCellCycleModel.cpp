@@ -68,7 +68,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 SimpleWntCellCycleModel::SimpleWntCellCycleModel()
     : mUseCellProliferativeTypeDependentG1Duration(false),
       mWntStemThreshold(0.9), // do not need this
-      mWntTransitThreshold(0.75), // have changed value from 0.65 to 0.75, to have a better fraction of TA:FD cells. Just a guess anyway.
+      mWntTransitThreshold(0.75),
       mWntLabelledThreshold(0.75)
 {
 }
@@ -242,7 +242,7 @@ void SimpleWntCellCycleModel::UpdateCellCyclePhase()
 	{
 		wnt_division_threshold = 0.72*mWntTransitThreshold; // product of the above two factors
 	}
-    
+
     else if (mpCell->GetMutationState()->IsType<ApcTwoHitCellMutationState>() || mpCell->GetMutationState()->IsType<MMRApcTwoHitCellMutationState>() || mpCell->GetMutationState()->IsType<BetaCateninTwoHitCellMutationState>() || mpCell->GetMutationState()->IsType<MMRBCTwoHitCellMutationState>())
     {
         // set to zero (no Wnt-dependence) for all APC-- dominated mutations and beta-catenin double hits
@@ -274,7 +274,7 @@ void SimpleWntCellCycleModel::UpdateCellCyclePhase()
 
 	// Cell is a TA cell if Wnt level is above the particular threshold.
     if (wnt_level >= wnt_division_threshold)
-    {	
+    {
    	    boost::shared_ptr<AbstractCellProperty> p_transit_type =
             mpCell->rGetCellPropertyCollection().GetCellPropertyRegistry()->Get<TransitCellProliferativeType>();
         mpCell->SetCellProliferativeType(p_transit_type);
@@ -296,12 +296,12 @@ void SimpleWntCellCycleModel::UpdateCellCyclePhase()
     boost::shared_ptr<AbstractCellProperty> p_state_1(CellPropertyRegistry::Instance()->Get<MMRTwoHitCellMutationState>());
 	boost::shared_ptr<AbstractCellProperty> p_state_2(CellPropertyRegistry::Instance()->Get<ApcOneHitCellMutationState>());
 	boost::shared_ptr<AbstractCellProperty> p_state_3(CellPropertyRegistry::Instance()->Get<ApcTwoHitCellMutationState>());
-	boost::shared_ptr<AbstractCellProperty> p_state_4(CellPropertyRegistry::Instance()->Get<BetaCateninOneHitCellMutationState>());	
+	boost::shared_ptr<AbstractCellProperty> p_state_4(CellPropertyRegistry::Instance()->Get<BetaCateninOneHitCellMutationState>());
 	boost::shared_ptr<AbstractCellProperty> p_state_5(CellPropertyRegistry::Instance()->Get<MMRApcOneHitCellMutationState>());
-	boost::shared_ptr<AbstractCellProperty> p_state_6(CellPropertyRegistry::Instance()->Get<MMRApcTwoHitCellMutationState>());		
-	boost::shared_ptr<AbstractCellProperty> p_state_7(CellPropertyRegistry::Instance()->Get<MMRBCOneHitCellMutationState>());	
-	boost::shared_ptr<AbstractCellProperty> p_state_8(CellPropertyRegistry::Instance()->Get<BCOneHitApcOneHitCellMutationState>());	
-	boost::shared_ptr<AbstractCellProperty> p_state_9(CellPropertyRegistry::Instance()->Get<MMRBCOneHitApcOneHitCellMutationState>());	
+	boost::shared_ptr<AbstractCellProperty> p_state_6(CellPropertyRegistry::Instance()->Get<MMRApcTwoHitCellMutationState>());
+	boost::shared_ptr<AbstractCellProperty> p_state_7(CellPropertyRegistry::Instance()->Get<MMRBCOneHitCellMutationState>());
+	boost::shared_ptr<AbstractCellProperty> p_state_8(CellPropertyRegistry::Instance()->Get<BCOneHitApcOneHitCellMutationState>());
+	boost::shared_ptr<AbstractCellProperty> p_state_9(CellPropertyRegistry::Instance()->Get<MMRBCOneHitApcOneHitCellMutationState>());
 	boost::shared_ptr<AbstractCellProperty> p_state_10(CellPropertyRegistry::Instance()->Get<BetaCateninTwoHitCellMutationState>());
 	boost::shared_ptr<AbstractCellProperty> p_state_11(CellPropertyRegistry::Instance()->Get<MMRBCTwoHitCellMutationState>());
 	boost::shared_ptr<AbstractCellProperty> p_state_12(CellPropertyRegistry::Instance()->Get<ApcLOHCellMutationState>());
@@ -314,7 +314,7 @@ void SimpleWntCellCycleModel::UpdateCellCyclePhase()
 	boost::shared_ptr<AbstractCellProperty> p_state_19(CellPropertyRegistry::Instance()->Get<BCLOHApcLOHCellMutationState>());
 	boost::shared_ptr<AbstractCellProperty> p_state_20(CellPropertyRegistry::Instance()->Get<BCLOHMMRApcLOHCellMutationState>());
 	boost::shared_ptr<AbstractCellProperty> p_state_21(CellPropertyRegistry::Instance()->Get<BCLOHCellMutationState>());
-	
+
 
 
 void SimpleWntCellCycleModel::InitialiseDaughterCell()
@@ -337,20 +337,18 @@ void SimpleWntCellCycleModel::InitialiseDaughterCell()
 	double mutInducedDeathRate = 0.0001; // death rate caused by mutations, corresponds to about 1/30 % deleterious mutations
 
 
-	if (mpCell->GetMutationState()->IsType<MMRTwoHitCellMutationState>() || mpCell->GetMutationState()->IsType<MMRApcOneHitCellMutationState>() || mpCell->GetMutationState()->IsType<MMRApcLOHCellMutationState>() || mpCell->GetMutationState()->IsType<MMRApcTwoHitCellMutationState>() || mpCell->GetMutationState()->IsType<MMRBCOneHitCellMutationState>() || mpCell->GetMutationState()->IsType<MMRBCTwoHitCellMutationState>() || mpCell->GetMutationState()->IsType<MMRBCOneHitApcOneHitCellMutationState>() || mpCell->GetMutationState()->IsType<MMRBCOneHitApcLOHCellMutationState>() || mpCell->GetMutationState()->IsType<BCLOHMMRTwoHitCellMutationState>() || mpCell->GetMutationState()->IsType<BCLOHMMRApcOneHitCellMutationState>() || mpCell->GetMutationState()->IsType<BCLOHMMRApcLOHCellMutationState>()) 
+	if (mpCell->GetMutationState()->IsType<MMRTwoHitCellMutationState>() || mpCell->GetMutationState()->IsType<MMRApcOneHitCellMutationState>() || mpCell->GetMutationState()->IsType<MMRApcLOHCellMutationState>() || mpCell->GetMutationState()->IsType<MMRApcTwoHitCellMutationState>() || mpCell->GetMutationState()->IsType<MMRBCOneHitCellMutationState>() || mpCell->GetMutationState()->IsType<MMRBCTwoHitCellMutationState>() || mpCell->GetMutationState()->IsType<MMRBCOneHitApcOneHitCellMutationState>() || mpCell->GetMutationState()->IsType<MMRBCOneHitApcLOHCellMutationState>() || mpCell->GetMutationState()->IsType<BCLOHMMRTwoHitCellMutationState>() || mpCell->GetMutationState()->IsType<BCLOHMMRApcOneHitCellMutationState>() || mpCell->GetMutationState()->IsType<BCLOHMMRApcLOHCellMutationState>())
 	{
 		mutInducedDeathRate *= 100.0; // Increase mutation-induced death probability of MMR-mutant cells hundred-fold.
 		Is_Cell_MMR_mut = true;
 	}
 
-	/*// mice simulation:
-	mutInducedDeathRate *= 100.0;*/	
 
 	if (RandomNumberGenerator::Instance()->ranf() < mutInducedDeathRate)
 	{
 		mpCell->StartApoptosis(); // cell dies shortly after division
 	}
-	
+
 
 	/* We need to distinguish between MLH1 and MSH2 germline mutation carriers, since MLH1 LOH of the WT allele can induce a CTNNB1 double hit, or lead to the loss of a CTNNB1 mutation.
 	 * To simulate different patients, we need to alter the boolean variable here and in TestColonicCryptSimulation.hpp. */
@@ -370,11 +368,8 @@ void SimpleWntCellCycleModel::InitialiseDaughterCell()
 		MMRMutProb = 0.000004375; // MSH2
 	}
 
-	/*// mice simulation:
-	
-	MMRMutProb = 0.0;*/
 
-	double MMRLOHProb; 
+	double MMRLOHProb;
 
 	if (MLH1)
 	{
@@ -385,31 +380,20 @@ void SimpleWntCellCycleModel::InitialiseDaughterCell()
 		MMRLOHProb = 0.00000987; // MSH2, only consider second allele
 	}
 
-	/*// mice simulation:
-
-	MMRLOHProb = 0.0;*/	
 
 	double ApcHitProb = 0.0000075; // Probability of a sporadic Apc mutation.
 	double ApcLOHProb = 0.0000343;
-	double BetaCateninProb = 0.000000003125; // Probability of a sporadic beta-catenin mutation.
+	double BetaCateninProb = 0.0000000375; // Probability of a sporadic beta-catenin mutation.
 	double BetaCateninLOHProb = 0.000010116; // Probability of Beta-Catenin LOH (important if second allele becomes mutated)
-      
+
 	// We increase the mutation probability of point mutations (as we do with death) 100-fold for MMR-deficient cells.
 
-	if (Is_Cell_MMR_mut) 
+	if (Is_Cell_MMR_mut)
 	{
 		ApcHitProb *= 100.0;
 		BetaCateninProb *= 100.0;
 	}
 
-	/*// mice simulation:
-
-	ApcHitProb *= 100.0;
-	BetaCateninProb *= 100.0;	*/
-	
-
-	// For all APC+- cells, the probability of another hit is half the initial probability.
-	// We do point mutations first..
 
 	if (mpCell->GetMutationState()->IsType<ApcOneHitCellMutationState>() || mpCell->GetMutationState()->IsType<MMRApcOneHitCellMutationState>() || mpCell->GetMutationState()->IsType<MMRBCOneHitApcOneHitCellMutationState>() || mpCell->GetMutationState()->IsType<BCOneHitApcOneHitCellMutationState>() || mpCell->GetMutationState()->IsType<BCLOHApcOneHitCellMutationState>() || mpCell->GetMutationState()->IsType<BCLOHMMRApcOneHitCellMutationState>())
 	{
@@ -431,17 +415,17 @@ void SimpleWntCellCycleModel::InitialiseDaughterCell()
 	if (mpCell->GetMutationState()->IsType<ApcTwoHitCellMutationState>() || mpCell->GetMutationState()->IsType<MMRApcTwoHitCellMutationState>())
 	{
 		Is_Cell_APC_Two_Hit_mut = true;
-	}	
-	
+	}
+
 	// mark beta-catenin single hits and halve the probability
 
 	if (mpCell->GetMutationState()->IsType<BetaCateninOneHitCellMutationState>() || mpCell->GetMutationState()->IsType<MMRBCOneHitCellMutationState>() || mpCell->GetMutationState()->IsType<BCOneHitApcOneHitCellMutationState>()  || mpCell->GetMutationState()->IsType<MMRBCOneHitApcOneHitCellMutationState>() || mpCell->GetMutationState()->IsType<BCOneHitApcLOHCellMutationState>() ||  mpCell->GetMutationState()->IsType<MMRBCOneHitApcLOHCellMutationState>())
 	{
-		BetaCateninProb *= 0.5;		
+		BetaCateninProb *= 0.5;
 		Is_Cell_BC_One_Hit_mut = true;
 	}
 
-	// mark beta-catenin LOHs 
+	// mark beta-catenin LOHs
 
 	if (mpCell->GetMutationState()->IsType<BCLOHCellMutationState>() || mpCell->GetMutationState()->IsType<BCLOHMMRTwoHitCellMutationState>() || mpCell->GetMutationState()->IsType<BCLOHApcOneHitCellMutationState>()  || mpCell->GetMutationState()->IsType<BCLOHMMRApcOneHitCellMutationState>() || mpCell->GetMutationState()->IsType<BCLOHApcLOHCellMutationState>() ||  mpCell->GetMutationState()->IsType<BCLOHMMRApcLOHCellMutationState>())
 	{
@@ -457,26 +441,26 @@ void SimpleWntCellCycleModel::InitialiseDaughterCell()
 		Is_Cell_BC_Two_Hit_mut = true;
 	}
 
-	
+
 
 	// We include random mutations upon cell division here. We broadly perform the same procedure as the SC mutation in the main code TestColonicCryptSimulation.hpp.
 
 	// MMR point mutation:
 	if (RandomNumberGenerator::Instance()->ranf() < MMRMutProb)
 	{
-		
+
 		if (!Is_Cell_MMR_mut) // novel MMR mutation
 		{
 			cout << "TA cell MMR point mutation in cluster " << rank << " at time " << SimulationTime::Instance()->GetTime() << endl; // output the time of mutation
 		}
-		
+
 		if (mpCell->GetMutationState()->IsType<WildTypeCellMutationState>())
 		{
 			mpCell->SetMutationState(p_state_1); // MMR mutation
 		}
 		else if (mpCell->GetMutationState()->IsType<BCLOHCellMutationState>())
 		{
-			mpCell->SetMutationState(p_state_16); 
+			mpCell->SetMutationState(p_state_16);
 		}
 		else if (mpCell->GetMutationState()->IsType<ApcOneHitCellMutationState>())
 		{
@@ -488,11 +472,11 @@ void SimpleWntCellCycleModel::InitialiseDaughterCell()
 		}
 		else if (mpCell->GetMutationState()->IsType<ApcLOHCellMutationState>())
 		{
-			mpCell->SetMutationState(p_state_13); 
+			mpCell->SetMutationState(p_state_13);
 		}
 		else if (mpCell->GetMutationState()->IsType<BCLOHApcLOHCellMutationState>())
 		{
-			mpCell->SetMutationState(p_state_20); 
+			mpCell->SetMutationState(p_state_20);
 		}
 		else if (mpCell->GetMutationState()->IsType<ApcTwoHitCellMutationState>())
 		{
@@ -512,20 +496,18 @@ void SimpleWntCellCycleModel::InitialiseDaughterCell()
 		}
 		else if (mpCell->GetMutationState()->IsType<BCOneHitApcLOHCellMutationState>())
 		{
-			mpCell->SetMutationState(p_state_15); 
+			mpCell->SetMutationState(p_state_15);
 		}
 	}
-	
-	// MMR LOH:
 
-	// todo (non-mice simulations): implement LOH states for MLH1. This reduces the MLH1 LOH probability such that no concurrent CTNNB1 LOH is possible after both MLH1 copies have been lost.
+	// MMR LOH:
 
 	if (RandomNumberGenerator::Instance()->ranf() < MMRLOHProb)
 	{
 
-		// Output the time of mutation in all cases. Even if the allele already has a point mutation, the LOH might still be relevant. 
+		// Output the time of mutation in all cases. Even if the allele already has a point mutation, the LOH might still be relevant.
 
-		cout << "TA cell MMR LOH in cluster " << rank << " at time " << SimulationTime::Instance()->GetTime() << endl; 
+		cout << "TA cell MMR LOH in cluster " << rank << " at time " << SimulationTime::Instance()->GetTime() << endl;
 
 		// First, take care of concurrent CTNNB1 LOH
 
@@ -549,9 +531,9 @@ void SimpleWntCellCycleModel::InitialiseDaughterCell()
 				}
 				else if (mpCell->GetMutationState()->IsType<ApcLOHCellMutationState>())
 				{
-					mpCell->SetMutationState(p_state_19); 
+					mpCell->SetMutationState(p_state_19);
 				}
-				else if (mpCell->GetMutationState()->IsType<MMRTwoHitCellMutationState>()) 
+				else if (mpCell->GetMutationState()->IsType<MMRTwoHitCellMutationState>())
 				{
 					mpCell->SetMutationState(p_state_16); // CTNNB1 LOH and MMR
 				}
@@ -569,28 +551,28 @@ void SimpleWntCellCycleModel::InitialiseDaughterCell()
 					{
 						mpCell->SetMutationState(p_state_10); // beta-catenin ++
 						cout << "TA cell beta-catenin double hit due to MLH1 LOH in cluster " << rank << " at time " << SimulationTime::Instance()->GetTime() << endl; // output event
-					}	
+					}
 					else // BC mutation is on lost allele
 					{
 						BetaCateninProb *= 2.0; // correct factor from above, probability was already halved
 						mpCell->SetMutationState(p_state_21); // CTNNB1 mut is lost
 						cout << "TA cell beta-catenin mutation is lost due to MLH1 LOH in cluster " << rank << " at time " << SimulationTime::Instance()->GetTime() << endl; // output event
-					}	
+					}
 				}
 				else if (mpCell->GetMutationState()->IsType<BCOneHitApcOneHitCellMutationState>())
 				{
-				
+
 					if (RandomNumberGenerator::Instance()->ranf() < 0.5) // BC mutation is on other allele
 					{
 						mpCell->SetMutationState(p_state_10); // beta-catenin ++ (and APC+-)
 						cout << "TA cell beta-catenin double hit due to MLH1 LOH in cluster " << rank << " at time " << SimulationTime::Instance()->GetTime() << endl; // output event
-					}	
+					}
 					else // BC mutation is on lost allele
 					{
 						BetaCateninProb *= 2.0; // correct factor from above, probability was already halved
 						mpCell->SetMutationState(p_state_17); // APC +-, beta-catenin mut is lost
 						cout << "TA cell beta-catenin mutation is lost due to MMR LOH in cluster " << rank << " at time " << SimulationTime::Instance()->GetTime() << endl; // output event
-					}		
+					}
 				}
 				else if (mpCell->GetMutationState()->IsType<BCOneHitApcLOHCellMutationState>())
 				{
@@ -598,7 +580,7 @@ void SimpleWntCellCycleModel::InitialiseDaughterCell()
 					{
 						mpCell->SetMutationState(p_state_10); // beta-catenin ++ (and APC+-)
 						cout << "TA cell beta-catenin double hit due to MMR LOH in cluster " << rank << " at time " << SimulationTime::Instance()->GetTime() << endl; // output event
-					}	
+					}
 					else // BC mutation is on lost allele
 					{
 						BetaCateninProb *= 2.0; // correct factor from above, probability was already halved
@@ -615,16 +597,16 @@ void SimpleWntCellCycleModel::InitialiseDaughterCell()
 				}
 			}
 		}
-	
+
 		// Now take care of the MMR mutation
-		
+
 		if (mpCell->GetMutationState()->IsType<WildTypeCellMutationState>())
 		{
 			mpCell->SetMutationState(p_state_1); // MMR mutation
 		}
 		else if (mpCell->GetMutationState()->IsType<BCLOHCellMutationState>())
 		{
-			mpCell->SetMutationState(p_state_16); 
+			mpCell->SetMutationState(p_state_16);
 		}
 		else if (mpCell->GetMutationState()->IsType<ApcOneHitCellMutationState>())
 		{
@@ -636,51 +618,51 @@ void SimpleWntCellCycleModel::InitialiseDaughterCell()
 		}
 		else if (mpCell->GetMutationState()->IsType<ApcLOHCellMutationState>())
 		{
-			mpCell->SetMutationState(p_state_13); 
+			mpCell->SetMutationState(p_state_13);
 		}
 		else if (mpCell->GetMutationState()->IsType<BCLOHApcLOHCellMutationState>())
 		{
-			mpCell->SetMutationState(p_state_20); 
+			mpCell->SetMutationState(p_state_20);
 		}
 		else if (mpCell->GetMutationState()->IsType<ApcTwoHitCellMutationState>())
 		{
 			mpCell->SetMutationState(p_state_6); // APC-- and MMR
 		}
 		else if (mpCell->GetMutationState()->IsType<BetaCateninOneHitCellMutationState>())
-		{			
-			mpCell->SetMutationState(p_state_7); // beta-catenin + and MMR	
+		{
+			mpCell->SetMutationState(p_state_7); // beta-catenin + and MMR
 		}
 		else if (mpCell->GetMutationState()->IsType<BetaCateninTwoHitCellMutationState>())
 		{
 			mpCell->SetMutationState(p_state_11); // beta-catenin ++ and MMR
 		}
 		else if (mpCell->GetMutationState()->IsType<BCOneHitApcOneHitCellMutationState>())
-		{		
-			mpCell->SetMutationState(p_state_9); // beta-catenin +, APC +- and MMR	
+		{
+			mpCell->SetMutationState(p_state_9); // beta-catenin +, APC +- and MMR
 		}
 		else if (mpCell->GetMutationState()->IsType<BCOneHitApcLOHCellMutationState>())
-		{			
-			mpCell->SetMutationState(p_state_15); // beta-catenin +, APC +- and MMR	
+		{
+			mpCell->SetMutationState(p_state_15); // beta-catenin +, APC +- and MMR
 		}
 	}
 
-	// APC point mutation: 
+	// APC point mutation:
 
 	if (RandomNumberGenerator::Instance()->ranf() < ApcHitProb)
-	{	
-		
+	{
+
 		if (Is_Cell_APC_One_Hit_pt_mut || Is_Cell_APC_One_Hit_LOH_mut) // second hit
-		{			
+		{
 			cout << "TA cell APC-- point mutation in cluster " << rank << " at time " << SimulationTime::Instance()->GetTime() << endl; // output the time of mutation
 		}
 
 		if (!Is_Cell_APC_One_Hit_pt_mut && !Is_Cell_APC_One_Hit_LOH_mut && !Is_Cell_APC_Two_Hit_mut) // novel APC mutation.
-		{			
+		{
 			cout << "TA cell APC+- point mutation in cluster " << rank << " at time " << SimulationTime::Instance()->GetTime() << endl; // output the time of mutation
 			Is_Cell_APC_One_Hit_pt_mut = true;
 			ApcLOHProb *= 0.5;
-		}		
-		
+		}
+
 		if (mpCell->GetMutationState()->IsType<WildTypeCellMutationState>())
 		{
 			mpCell->SetMutationState(p_state_2); // APC+-
@@ -689,20 +671,20 @@ void SimpleWntCellCycleModel::InitialiseDaughterCell()
 		{
 			mpCell->SetMutationState(p_state_17); // APC+- and CTNNB1 LOH
 		}
-		else if (mpCell->GetMutationState()->IsType<MMRTwoHitCellMutationState>()) 
+		else if (mpCell->GetMutationState()->IsType<MMRTwoHitCellMutationState>())
 		{
 			mpCell->SetMutationState(p_state_5); // APC+- and MMR
 		}
-		else if (mpCell->GetMutationState()->IsType<BCLOHMMRTwoHitCellMutationState>()) 
+		else if (mpCell->GetMutationState()->IsType<BCLOHMMRTwoHitCellMutationState>())
 		{
 			mpCell->SetMutationState(p_state_18); // APC+-, CTNNB1 LOH and MMR
 		}
-		else if (mpCell->GetMutationState()->IsType<MMRBCOneHitCellMutationState>()) 
+		else if (mpCell->GetMutationState()->IsType<MMRBCOneHitCellMutationState>())
 		{
 			mpCell->SetMutationState(p_state_9); // APC+-, beta-catenin+ and MMR
 		}
-		else if (mpCell->GetMutationState()->IsType<ApcOneHitCellMutationState>() || mpCell->GetMutationState()->IsType<BCLOHApcOneHitCellMutationState>() || mpCell->GetMutationState()->IsType<ApcLOHCellMutationState>() || mpCell->GetMutationState()->IsType<BCLOHApcLOHCellMutationState>() || mpCell->GetMutationState()->IsType<BCOneHitApcOneHitCellMutationState>() || mpCell->GetMutationState()->IsType<BCOneHitApcLOHCellMutationState>()) 
-		{			
+		else if (mpCell->GetMutationState()->IsType<ApcOneHitCellMutationState>() || mpCell->GetMutationState()->IsType<BCLOHApcOneHitCellMutationState>() || mpCell->GetMutationState()->IsType<ApcLOHCellMutationState>() || mpCell->GetMutationState()->IsType<BCLOHApcLOHCellMutationState>() || mpCell->GetMutationState()->IsType<BCOneHitApcOneHitCellMutationState>() || mpCell->GetMutationState()->IsType<BCOneHitApcLOHCellMutationState>())
+		{
 			mpCell->SetMutationState(p_state_3); // APC-- (or beta-catenin+ and APC--, which is functionally equivalent in the cell cycle model)
 		}
 		else if (mpCell->GetMutationState()->IsType<MMRApcOneHitCellMutationState>() || mpCell->GetMutationState()->IsType<BCLOHMMRApcOneHitCellMutationState>() || mpCell->GetMutationState()->IsType<MMRApcLOHCellMutationState>() || mpCell->GetMutationState()->IsType<BCLOHMMRApcLOHCellMutationState>() || mpCell->GetMutationState()->IsType<MMRBCOneHitApcOneHitCellMutationState>() || mpCell->GetMutationState()->IsType<MMRBCOneHitApcLOHCellMutationState>())
@@ -714,22 +696,22 @@ void SimpleWntCellCycleModel::InitialiseDaughterCell()
 			mpCell->SetMutationState(p_state_8); // APC+- and beta-catenin+
 		}
 	}
-	
+
 	// APC LOH:
 
 	if (RandomNumberGenerator::Instance()->ranf() < ApcLOHProb)
-	{	
-		
+	{
+
 		if (!Is_Cell_APC_One_Hit_pt_mut && !Is_Cell_APC_One_Hit_LOH_mut && !Is_Cell_APC_Two_Hit_mut) // novel LOH
-		{			
+		{
 			cout << "TA cell APC+- LOH in cluster " << rank << " at time " << SimulationTime::Instance()->GetTime() << endl; // output the time of mutation
 		}
 
 		if (Is_Cell_APC_One_Hit_pt_mut) // second hit
-		{			
+		{
 			cout << "TA cell APC-- LOH in cluster " << rank << " at time " << SimulationTime::Instance()->GetTime() << endl; // output the time of mutation
-		}		
-		
+		}
+
 		if (mpCell->GetMutationState()->IsType<WildTypeCellMutationState>())
 		{
 			mpCell->SetMutationState(p_state_12); // APC+-
@@ -738,20 +720,20 @@ void SimpleWntCellCycleModel::InitialiseDaughterCell()
 		{
 			mpCell->SetMutationState(p_state_19); // APC+- and CTNNB1 LOH
 		}
-		else if (mpCell->GetMutationState()->IsType<MMRTwoHitCellMutationState>()) 
+		else if (mpCell->GetMutationState()->IsType<MMRTwoHitCellMutationState>())
 		{
 			mpCell->SetMutationState(p_state_13); // APC+- and MMR
 		}
-		else if (mpCell->GetMutationState()->IsType<BCLOHMMRTwoHitCellMutationState>()) 
+		else if (mpCell->GetMutationState()->IsType<BCLOHMMRTwoHitCellMutationState>())
 		{
 			mpCell->SetMutationState(p_state_20); // APC+-, CTNNB1 LOH and MMR
 		}
-		else if (mpCell->GetMutationState()->IsType<MMRBCOneHitCellMutationState>()) 
+		else if (mpCell->GetMutationState()->IsType<MMRBCOneHitCellMutationState>())
 		{
 			mpCell->SetMutationState(p_state_15); // APC+-, beta-catenin+ and MMR
 		}
-		else if (mpCell->GetMutationState()->IsType<ApcOneHitCellMutationState>() || mpCell->GetMutationState()->IsType<BCLOHApcOneHitCellMutationState>() ||  mpCell->GetMutationState()->IsType<BCOneHitApcOneHitCellMutationState>()) 
-		{			
+		else if (mpCell->GetMutationState()->IsType<ApcOneHitCellMutationState>() || mpCell->GetMutationState()->IsType<BCLOHApcOneHitCellMutationState>() ||  mpCell->GetMutationState()->IsType<BCOneHitApcOneHitCellMutationState>())
+		{
 			mpCell->SetMutationState(p_state_3); // APC-- (or beta-catenin+ and APC--, which is functionally equivalent in the cell cycle model)
 		}
 		else if (mpCell->GetMutationState()->IsType<ApcLOHCellMutationState>() || mpCell->GetMutationState()->IsType<BCLOHApcLOHCellMutationState>() || mpCell->GetMutationState()->IsType<BCOneHitApcLOHCellMutationState>())
@@ -772,19 +754,19 @@ void SimpleWntCellCycleModel::InitialiseDaughterCell()
 		}
 	}
 
-	// Beta-Catenin point mutation: 
+	// Beta-Catenin point mutation:
 	if (RandomNumberGenerator::Instance()->ranf() < BetaCateninProb)
-	{	
+	{
 		if (!Is_Cell_BC_One_Hit_mut && !Is_Cell_BC_Two_Hit_mut) // novel BC mutation
 		{
 			cout << "TA cell beta-catenin+ mutation in cluster " << rank << " at time " << SimulationTime::Instance()->GetTime() << endl; // output the time of mutation
 		}
-		
+
 		if (Is_Cell_BC_One_Hit_mut) // second hit
 		{
 			cout << "TA cell beta-catenin++ mutation in cluster " << rank << " at time " << SimulationTime::Instance()->GetTime() << endl; // output the time of mutation
 		}
-		
+
 		if (Is_BC_affected) // only one beta-catenin allele left
 		{
 			if (Is_Cell_MMR_mut)
@@ -802,17 +784,17 @@ void SimpleWntCellCycleModel::InitialiseDaughterCell()
 			{
 				mpCell->SetMutationState(p_state_4); // beta-catenin+ mutation
 			}
-			else if (mpCell->GetMutationState()->IsType<MMRTwoHitCellMutationState>()) 
+			else if (mpCell->GetMutationState()->IsType<MMRTwoHitCellMutationState>())
 			{
 				mpCell->SetMutationState(p_state_7); // beta-catenin+ and MMR
 			}
-			else if (mpCell->GetMutationState()->IsType<ApcOneHitCellMutationState>()) 
-			{			
+			else if (mpCell->GetMutationState()->IsType<ApcOneHitCellMutationState>())
+			{
 				mpCell->SetMutationState(p_state_8); // beta-catenin+ and APC+-
 			}
-			else if (mpCell->GetMutationState()->IsType<ApcLOHCellMutationState>()) 
-			{			
-				mpCell->SetMutationState(p_state_14); 
+			else if (mpCell->GetMutationState()->IsType<ApcLOHCellMutationState>())
+			{
+				mpCell->SetMutationState(p_state_14);
 			}
 			else if (mpCell->GetMutationState()->IsType<MMRApcOneHitCellMutationState>())
 			{
@@ -820,7 +802,7 @@ void SimpleWntCellCycleModel::InitialiseDaughterCell()
 			}
 			else if (mpCell->GetMutationState()->IsType<MMRApcLOHCellMutationState>())
 			{
-				mpCell->SetMutationState(p_state_15); 
+				mpCell->SetMutationState(p_state_15);
 			}
 			else if (mpCell->GetMutationState()->IsType<BetaCateninOneHitCellMutationState>() || mpCell->GetMutationState()->IsType<BCOneHitApcOneHitCellMutationState>() || mpCell->GetMutationState()->IsType<BCOneHitApcLOHCellMutationState>())
 			{
@@ -853,9 +835,9 @@ void SimpleWntCellCycleModel::InitialiseDaughterCell()
 			}
 			else if (mpCell->GetMutationState()->IsType<ApcLOHCellMutationState>())
 			{
-			mpCell->SetMutationState(p_state_19); 
+			mpCell->SetMutationState(p_state_19);
 			}
-			else if (mpCell->GetMutationState()->IsType<MMRTwoHitCellMutationState>()) 
+			else if (mpCell->GetMutationState()->IsType<MMRTwoHitCellMutationState>())
 			{
 				mpCell->SetMutationState(p_state_16); // CTNNB1 LOH and MMR
 			}
@@ -873,28 +855,28 @@ void SimpleWntCellCycleModel::InitialiseDaughterCell()
 				{
 					mpCell->SetMutationState(p_state_10); // beta-catenin ++
 					cout << "TA cell beta-catenin double hit due to MLH1 LOH in cluster " << rank << " at time " << SimulationTime::Instance()->GetTime() << endl; // output event
-				}	
+				}
 				else // BC mutation is on lost allele
 				{
 					BetaCateninProb *= 2.0; // correct factor from above, probability was already halved
 					mpCell->SetMutationState(p_state_21); // CTNNB1 mut is lost
 					cout << "TA cell beta-catenin mutation is lost due to MLH1 LOH in cluster " << rank << " at time " << SimulationTime::Instance()->GetTime() << endl; // output event
-				}	
+				}
 			}
 			else if (mpCell->GetMutationState()->IsType<BCOneHitApcOneHitCellMutationState>())
 			{
-				
+
 				if (RandomNumberGenerator::Instance()->ranf() < 0.5) // BC mutation is on other allele
 				{
 					mpCell->SetMutationState(p_state_10); // beta-catenin ++ (and APC+-)
 					cout << "TA cell beta-catenin double hit due to MLH1 LOH in cluster " << rank << " at time " << SimulationTime::Instance()->GetTime() << endl; // output event
-				}	
+				}
 				else // BC mutation is on lost allele
 				{
 					BetaCateninProb *= 2.0; // correct factor from above, probability was already halved
 					mpCell->SetMutationState(p_state_17); // APC +-, beta-catenin mut is lost
 					cout << "TA cell beta-catenin mutation is lost due to MLH1 LOH in cluster " << rank << " at time " << SimulationTime::Instance()->GetTime() << endl; // output event
-				}		
+				}
 			}
 			else if (mpCell->GetMutationState()->IsType<BCOneHitApcLOHCellMutationState>())
 			{
@@ -902,7 +884,7 @@ void SimpleWntCellCycleModel::InitialiseDaughterCell()
 				{
 					mpCell->SetMutationState(p_state_10); // beta-catenin ++ (and APC+-)
 					cout << "TA cell beta-catenin double hit due to MLH1 LOH in cluster " << rank << " at time " << SimulationTime::Instance()->GetTime() << endl; // output event
-				}	
+				}
 				else // BC mutation is on lost allele
 				{
 					BetaCateninProb *= 2.0; // correct factor from above, probability was already halved
@@ -911,7 +893,7 @@ void SimpleWntCellCycleModel::InitialiseDaughterCell()
 				}
 			}
 		}
-		
+
 		if (MLH1 && RandomNumberGenerator::Instance()->ranf() < 0.8) // CTNNB1 LOH affects MLH1 in 80% of cases.
 		{
 			if (mpCell->GetMutationState()->IsType<WildTypeCellMutationState>())
@@ -920,7 +902,7 @@ void SimpleWntCellCycleModel::InitialiseDaughterCell()
 			}
 			else if (mpCell->GetMutationState()->IsType<BCLOHCellMutationState>())
 			{
-				mpCell->SetMutationState(p_state_16); 
+				mpCell->SetMutationState(p_state_16);
 			}
 			else if (mpCell->GetMutationState()->IsType<ApcOneHitCellMutationState>())
 			{
@@ -932,35 +914,35 @@ void SimpleWntCellCycleModel::InitialiseDaughterCell()
 			}
 			else if (mpCell->GetMutationState()->IsType<ApcLOHCellMutationState>())
 			{
-				mpCell->SetMutationState(p_state_13); 
+				mpCell->SetMutationState(p_state_13);
 			}
 			else if (mpCell->GetMutationState()->IsType<BCLOHApcLOHCellMutationState>())
 			{
-				mpCell->SetMutationState(p_state_20); 
+				mpCell->SetMutationState(p_state_20);
 			}
 			else if (mpCell->GetMutationState()->IsType<ApcTwoHitCellMutationState>())
 			{
 				mpCell->SetMutationState(p_state_6); // APC-- and MMR
 			}
 			else if (mpCell->GetMutationState()->IsType<BetaCateninOneHitCellMutationState>())
-			{			
-				mpCell->SetMutationState(p_state_7); // beta-catenin + and MMR	
+			{
+				mpCell->SetMutationState(p_state_7); // beta-catenin + and MMR
 			}
 			else if (mpCell->GetMutationState()->IsType<BetaCateninTwoHitCellMutationState>())
 			{
 				mpCell->SetMutationState(p_state_11); // beta-catenin ++ and MMR
 			}
 			else if (mpCell->GetMutationState()->IsType<BCOneHitApcOneHitCellMutationState>())
-			{		
-				mpCell->SetMutationState(p_state_9); // beta-catenin +, APC +- and MMR	
+			{
+				mpCell->SetMutationState(p_state_9); // beta-catenin +, APC +- and MMR
 			}
 			else if (mpCell->GetMutationState()->IsType<BCOneHitApcLOHCellMutationState>())
-			{			
-				mpCell->SetMutationState(p_state_15); // beta-catenin +, APC +- and MMR	
+			{
+				mpCell->SetMutationState(p_state_15); // beta-catenin +, APC +- and MMR
 			}
-				
+
 		}
-	}	
+	}
 
     AbstractSimplePhaseBasedCellCycleModel::InitialiseDaughterCell();
 }
