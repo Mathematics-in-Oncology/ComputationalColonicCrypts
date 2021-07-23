@@ -7,26 +7,26 @@ carcinogenesis.
 
 ## Overview
 ComputationalColonicCrypts aims to be an implementation of the
-computational model presented in Haupt et al (2021), in preparation
+computational model presented in [Haupt et al. (Comp Sys Onc, 2021)](https://doi.org/10.1002/cso2.1020)
 for the evolution of colonic crypts in Lynch syndrome carcinogenesis.
-[A preprint is available on bioRxiv](https://doi.org/10.1101/2020.12.29.424555).
 The implementation is based on the Chaste software, release 2019.1.
 It can be included in the existing Chaste implementation by replacing
 and adding some files, all available here in this repository.
 
 ### Citation
-If you are using this code in your project, please consider [citing our paper](https://doi.org/10.1101/2020.12.29.424555).
+If you are using this code in your project, please consider [citing our paper](https://doi.org/10.1002/cso2.1020).
 
-    @article {Haupt2020.12.29.424555,
-        author       = {Haupt, Saskia and Gleim, Nils and Ahadova, Aysel and Bl{\"a}ker, Hendrik and von Knebel Doeberitz, Magnus and Kloor, Matthias and Heuveline, Vincent},
-        title        = {Computational model investigates the evolution of colonic crypts during Lynch syndrome carcinogenesis},
-        elocation-id = {2020.12.29.424555},
-        year         = {2020},
-        doi          = {10.1101/2020.12.29.424555},
-        publisher    = {Cold Spring Harbor Laboratory},
-        URL          = {https://www.biorxiv.org/content/early/2020/12/29/2020.12.29.424555},
-        eprint       = {https://www.biorxiv.org/content/early/2020/12/29/2020.12.29.424555.full.pdf},
-        journal      = {bioRxiv}
+    @article{Haupt2021,
+        doi = {10.1002/cso2.1020},
+        url = {https://doi.org/10.1002/cso2.1020},
+        year = {2021},
+        month = jun,
+        publisher = {Wiley},
+        volume = {1},
+        number = {2},
+        author = {Saskia Haupt and Nils Gleim and Aysel Ahadova and Hendrik Bl\"{a}ker and Magnus Knebel Doeberitz and Matthias Kloor and Vincent Heuveline},
+        title = {A computational model for investigating the evolution of colonic crypts during Lynch syndrome carcinogenesis},
+        journal = {Computational and Systems Oncology}
     }
 
 
