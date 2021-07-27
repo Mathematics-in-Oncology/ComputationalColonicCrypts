@@ -103,7 +103,7 @@ Now, Chaste is installed, and you can go to the next steps to install the Lynch 
 Several existing files have to be replaced and further files have to be added to the original Chaste installation.
 For this, both folders `cell_based` and `crypt` with subfolders and files
 can be downloaded from this repository and moved into the Chaste source code in `/path/to/Chaste_source_code/`.
-Note: Do not copy the `run.cpp` and `Visualize2dCentreCells.java` in this step.
+Note: Do not copy the `run.cpp` and `Visualize2dCentreCells.java` files in this step.
 
 Merge the folders and replace the already existing files with the files for the Lynch syndrome simulation.
 The easiest way to do this is to select both folders `cell_based` and `crypt`,
