@@ -220,7 +220,7 @@ To visualize the results, open a new terminal and type
 
     cd /path/to/Chaste_source_code
     cd anim
-Now replace the `Visualize2dCentreCells.java` in this directory.
+Now replace the `Visualize2dCentreCells.java` file in this directory.
 To create the java executable
 
     javac Visualize2dCentreCells.java
