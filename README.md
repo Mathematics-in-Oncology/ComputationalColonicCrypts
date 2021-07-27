@@ -9,7 +9,7 @@ carcinogenesis.
 ComputationalColonicCrypts aims to be an implementation of the
 computational model presented in [Haupt et al. (Comp Sys Onc, 2021)](https://doi.org/10.1002/cso2.1020)
 for the evolution of colonic crypts in Lynch syndrome carcinogenesis.
-The implementation is based on the Chaste software, release 2019.1.
+The implementation is based on the Chaste software, release 2021.1.
 It can be included in the existing Chaste implementation by replacing
 and adding some files, all available here in this repository.
 
@@ -32,19 +32,19 @@ If you are using this code in your project, please consider [citing our paper](h
 
 ## Installation
 
-### Original Chaste software, release 2019.1
-In the following we list instructions for installing the Chaste software (release 2019.1) on Ubuntu 18.04 LTS.
+### Original Chaste software, release 2021.1
+In the following we list instructions for installing the Chaste software (release 2021.1) on Ubuntu 20.04 LTS.
 For other operating systems, please consult the [Chaste Guides](https://chaste.cs.ox.ac.uk/trac/wiki/ChasteGuides).
 
-Download the Chaste release 2019.1 from the [GitHub repository](https://github.com/Chaste/Chaste/releases/tag/release_2019.1)
+Download the Chaste release 2021.1 from the [GitHub repository](https://github.com/Chaste/Chaste/releases/tag/release_2021.1)
 
-Download the [Chaste Ubuntu package](https://chaste.cs.ox.ac.uk/chaste/tutorials/release_2019.1/InstallGuides/UbuntuPackage.html) via:
+Download the [Chaste Ubuntu package](https://chaste.cs.ox.ac.uk/chaste/tutorials/release_2021.1/InstallGuides/UbuntuPackage.html) via:
 
     sudo nano /etc/apt/sources.list.d/chaste.list
 
-and, depending on your Ubuntu version, add one of the lines listed on https://chaste.cs.ox.ac.uk/chaste/tutorials/release_2019.1/InstallGuides/UbuntuPackage.html to the `chaste.list` text file. For Ubuntu 18.04 LTS, add the line
+and, depending on your Ubuntu version, add one of the lines listed on https://chaste.cs.ox.ac.uk/chaste/tutorials/release_2021.1/InstallGuides/UbuntuPackage.html to the `chaste.list` text file. For Ubuntu 20.04 LTS, add the line
 
-    deb http://www.cs.ox.ac.uk/chaste/ubuntu bionic/
+    deb http://www.cs.ox.ac.uk/chaste/ubuntu focal/
 
 Install the Chaste public license key:
 
@@ -55,7 +55,7 @@ Get the correct dependencies for Chaste:
     sudo apt-get update
     sudo apt-get install chaste-dependencies
 
-Once you have obtained the Chaste source code and installed all dependencies, [you can make a first run of Chaste](https://chaste.cs.ox.ac.uk/chaste/tutorials/release_2019.1/ChasteGuides/CmakeFirstRun.html). Your Chaste source code is in the directory
+Once you have obtained the Chaste source code and installed all dependencies, [you can make a first run of Chaste](https://chaste.cs.ox.ac.uk/chaste/tutorials/release_2021.1/ChasteGuides/CmakeFirstRun.html). Your Chaste source code is in the directory
 
     /path/to/Chaste_source_code
 
@@ -103,7 +103,7 @@ Now, Chaste is installed, and you can go to the next steps to install the Lynch 
 Several existing files have to be replaced and further files have to be added to the original Chaste installation.
 For this, both folders `cell_based` and `crypt` with subfolders and files
 can be downloaded from this repository and moved into the Chaste source code in `/path/to/Chaste_source_code/`.
-Note: Do not copy the `run.cpp` in this step.
+Note: Do not copy the `run.cpp` and `Visualize2dCentreCells.java` in this step.
 
 Merge the folders and replace the already existing files with the files for the Lynch syndrome simulation.
 The easiest way to do this is to select both folders `cell_based` and `crypt`,
@@ -182,7 +182,7 @@ The following .txt file has to be added which contains all the necessary tests
 ### Execute the code
 The main file is *crypt/test/cell/TestColonicCryptSimulation.hpp*
 
-If you want to have a new build folder, create an empty `chaste_build_lynch`
+We recommend creating a new build folder, e.g. create an empty `chaste_build_lynch`
 directory outside the source directory and change into it:
 
     mkdir /path/to/chaste_build_lynch
@@ -196,7 +196,7 @@ As above, if the command runs without any errors, the last lines of the output w
 
     -- Configuring done
     -- Generating done
-    -- Build files have been written to: /path/to/chaste_build
+    -- Build files have been written to: /path/to/chaste_build_lynch
 
 Next, compile the Continuous test pack of Chaste
 
@@ -220,7 +220,7 @@ To visualize the results, open a new terminal and type
 
     cd /path/to/Chaste_source_code
     cd anim
-
+Now replace the `Visualize2dCentreCells.java` in this directory.
 To create the java executable
 
     javac Visualize2dCentreCells.java
@@ -247,7 +247,7 @@ If you want to simulate multiple crypts in parallel on multiple processors,
 please make sure that MPI is installed.
 Place the `run.cpp` file into the `chaste_build_lynch` folder, change into it, compile and run it by
 
-    g++ -o run run.cpp
+    mpic++ -o run run.cpp
     mpirun -n 4 ./run
 
 This will run the code on 4 processors.
@@ -291,11 +291,11 @@ of the stem cells in a straightforward way.
 For hardware requirements, we refer to https://chaste.cs.ox.ac.uk/trac/wiki/GettingStarted#SupportedOperatingSystems.
 
 ### Software requirements
-For running the simulations, you need to install [Chaste, release 2019.1](https://github.com/Chaste/Chaste/releases/tag/release_2019.1).
+For running the simulations, you need to install [Chaste, release 2021.1](https://github.com/Chaste/Chaste/releases/tag/release_2021.1).
 
 ### OS requirements
-For OS requirements, we refer to https://chaste.cs.ox.ac.uk/chaste/tutorials/release_2019.1/.
-The custom code was developed and tested on Ubuntu 18.04 LTS.
+For OS requirements, we refer to https://chaste.cs.ox.ac.uk/chaste/tutorials/release_2021.1/.
+The custom code was developed and tested on Ubuntu 20.04 LTS.
 
 ## License
 
